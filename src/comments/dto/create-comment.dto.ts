@@ -1,4 +1,4 @@
 export class CreateCommentDto {
-    constructor(readonly username: string, readonly comment: string) {
+    constructor(readonly postId: number, readonly username: string, readonly comment: string) {
     }
 }

@@ -18,6 +18,11 @@ export class CommentsController {
         return this.commentService.findById(id)
     }
 
+    @Get()
+    findAllByPostId (@Query('postId', new ParseIntPipe()) postId: number){
+        return this.commentService.findAllByPostId(postId)
+    }
+
     @Post()
     @HttpCode(HttpStatus.CREATED)
     create(@Body() body: CreateCommentDto) {

@@ -12,6 +12,10 @@ export class CommentService {
         return this.comments
     }
 
+    findAllByPostId(postId: number) {
+        return this.comments.filter(comment => comment.postId === postId)
+    }
+
     findById(id: number) {
         const index = this.comments.findIndex(p => p.id === id)
 
