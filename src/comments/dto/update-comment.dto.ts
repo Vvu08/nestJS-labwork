@@ -1,3 +1,5 @@
 export class UpdateCommentDto {
-    constructor(readonly comment: string) {}
+    constructor(
+        readonly comment: string
+        ) {}
 }

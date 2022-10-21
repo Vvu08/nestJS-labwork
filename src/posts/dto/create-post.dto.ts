@@ -1,4 +1,6 @@
 export class CreatePostDto {
-    constructor(readonly title: string, readonly description: string) {
-    }
+    constructor(
+        readonly title: string, 
+        readonly description: string) 
+        {}
 }

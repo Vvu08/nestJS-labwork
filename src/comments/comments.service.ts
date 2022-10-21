@@ -1,55 +1,73 @@
-import { Injectable } from '@nestjs/common';
-import { randomIntFromInterval } from 'src/utils/randomizer';
-import { CreateCommentDto } from './dto/create-comment.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Comments } from './comments.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { Comment } from './comments.interface';
+import { CreateCommentDto } from './dto/create-comment.dto';
+import { Posts } from 'src/posts/posts.entity';
 
 @Injectable()
 export class CommentService {
-    private comments: Comment[] = []
+    constructor(
+        @InjectRepository(Comments)
+        private readonly commentsRepository: Repository<Comments>,
+        @InjectRepository(Posts)
+        private readonly postsRepository: Repository<Posts>,
+      ) {}
 
-    findAll() {
-        return this.comments
+    findAll(page: number, size: number) {
+        return this.commentsRepository.find();
     }
 
-    findAllByPostId(postId: number) {
-        return this.comments.filter(comment => comment.postId === postId)
-    }
-
-    findById(id: number) {
-        const index = this.comments.findIndex(p => p.id === id)
-
-        if (index < 0) throw new Error("Not found")
-
-        return this.comments[index]
-    }
-
-    create(comment: CreateCommentDto) {
-        const _comment: Comment = {
-            id: randomIntFromInterval(1, 1000),
-            createdAt: new Date().toDateString(),
-            ...comment
+    async findById(id: number) {
+        const comment = await this.commentsRepository.findOneBy({ id: id });
+    
+        if (!comment) {
+          throw new HttpException(
+            `Comment with given id = ${id} not found!`,
+            HttpStatus.NOT_FOUND,
+          );
         }
-        this.comments.push(_comment)
-        return _comment
-    }
+    
+        return comment;
+    } 
 
-    update(id: number, comment: UpdateCommentDto) {
-        const index = this.comments.findIndex(p => p.id === id)
+    async create(createDTO: CreateCommentDto) {
+        const post = await this.postsRepository.findOneBy({ id: createDTO.postId });
 
-        if (index < 0) throw new Error("Not found")
-
-        const _comment: Comment = {
-            ...this.comments[index],
-            ...comment
+        if (!post) {
+            throw new HttpException(
+                `Post with given id = ${createDTO.postId} not found!`,
+                HttpStatus.NOT_FOUND,
+            );
         }
 
-        this.comments[index] = _comment
-        return _comment
+        const comment = this.commentsRepository.create({
+            post: { id: createDTO.postId },
+            ...createDTO,
+        });
+        return this.commentsRepository.save(comment);
     }
 
-    delete(id: number) {
-        this.comments = this.comments.filter(p => p.id !== id)
+    async update(id: number, updateDTO: UpdateCommentDto) {
+        const comment = await this.commentsRepository.findOneBy({ id: id });
+    
+        if (!comment) {
+          throw new HttpException(
+            `Comment with given id = ${id} not found!`,
+            HttpStatus.NOT_FOUND,
+          );
+        }
+    
+        return this.commentsRepository.save({
+          ...comment,
+          ...updateDTO,
+          updatedAt: new Date().toISOString(),
+        });
+      }
+
+    async delete(id: number) {
+        await this.commentsRepository.delete({ id: id });
     }
 
 }
