@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Put, Delete, Body, ParseIntPipe, HttpCode, HttpStatus,/* Request, Response,*/ Query, Header, Redirect } from '@nestjs/common';
+import { Controller, Get, Param, Post, Put, Delete, Body, ParseIntPipe, HttpCode, HttpStatus,/* Request, Response,*/ Query, Header, Redirect, BadRequestException } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CommentService } from './comments.service';
@@ -26,6 +26,7 @@ export class CommentsController {
     @Post()
     @HttpCode(HttpStatus.CREATED)
     create(@Body() body: CreateCommentDto) {
+        //throw new BadRequestException
         return this.commentService.create(body)
     }
 
