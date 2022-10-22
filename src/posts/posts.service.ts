@@ -29,16 +29,12 @@ export class PostService {
         return new Paginated<Posts>(posts, count, pages, page);
       }
 
-      async findCommentstoPost(id: number, page: number, size: number, search: string) {
+      async findCommentstoPost(id: number, page: number, size: number) {
         const skip = page * size;
         const [comments, count] = await this.commentsRepository.findAndCount({
             skip: skip,
             take: size,
-            where: {
-                post: {
-                    id: id
-                }
-            }
+            where: { post: { id: id } }
         });
         
         const pages = Math.ceil(count / size);

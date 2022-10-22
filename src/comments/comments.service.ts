@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Comments } from './comments.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -16,7 +16,9 @@ export class CommentService {
       ) {}
 
     findAll(page: number, size: number) {
-        return this.commentsRepository.find();
+      //find where deleted data is null
+      
+      return this.commentsRepository.find({where: {deletedAt: IsNull()}});
     }
 
     async findById(id: number) {

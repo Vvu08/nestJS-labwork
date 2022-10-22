@@ -20,9 +20,8 @@ export class PostsController {
     findCommentstoPost(@Param('postId', new ParseIntPipe()) postId: number,
                    @Query('page', new DefaultValuePipe(0), new ParseIntPipe()) page: number,
                    @Query('size', new DefaultValuePipe(DEFAULT_PAGE_SIZE), new ParseIntPipe()) size: number,
-                   @Query('search') search: string
                    ) {
-        return this.postsService.findCommentstoPost(postId, page, size, search);
+        return this.postsService.findCommentstoPost(postId, page, size);
     }
 
     @Get(":id")

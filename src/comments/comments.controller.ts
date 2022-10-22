@@ -12,7 +12,8 @@ export class CommentsController {
     @Get()
     findAll ( 
         @Query('page', new DefaultValuePipe(0), new ParseIntPipe()) page: number,
-        @Query('size', new DefaultValuePipe(DEFAULT_PAGE_SIZE), new ParseIntPipe())size: number,) {
+        @Query('size', new DefaultValuePipe(DEFAULT_PAGE_SIZE), new ParseIntPipe())size: number,
+        ) {
             return this.commentService.findAll(page, size);
     }
 
