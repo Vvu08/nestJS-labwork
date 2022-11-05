@@ -1,6 +1,8 @@
+import { IsString } from "class-validator"
+
 export class CreatePostDto {
-    constructor(
-        readonly title: string, 
-        readonly description: string) 
-        {}
+    @IsString({ message: "Title field is required!" })
+    public title: string
+    @IsString()
+    public description: string
 }

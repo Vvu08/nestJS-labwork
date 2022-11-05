@@ -1,7 +1,10 @@
+import { IsNumber, IsString } from "class-validator"
+
 export class CreateCommentDto {
-    constructor(
-        readonly postId: number, 
-        readonly username: string, 
-        readonly comment: string
-        ) {}
+    @IsNumber()
+    public postId: number
+    @IsString()
+    public username: string
+    @IsString()
+    public comment: string
 }

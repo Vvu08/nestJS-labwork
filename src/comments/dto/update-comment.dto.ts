@@ -1,5 +1,6 @@
+import { IsString } from "class-validator";
+
 export class UpdateCommentDto {
-    constructor(
-        readonly comment: string
-        ) {}
+    @IsString()
+    public comment: string
 }
