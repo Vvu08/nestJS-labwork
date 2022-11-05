@@ -1,8 +1,9 @@
-import { Controller, Get, Param, Post, Put, Delete, Body, ParseIntPipe, HttpCode, HttpStatus,/* Request, Response,*/ Query, Header, Redirect, BadRequestException, DefaultValuePipe } from '@nestjs/common';
+import { Controller, Get, Param, Post, Put, Delete, Body, ParseIntPipe, HttpCode, HttpStatus,/* Request, Response,*/ Query, Header, Redirect, BadRequestException, DefaultValuePipe, UseGuards } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CommentService } from './comments.service';
 import { DEFAULT_PAGE_SIZE } from 'src/posts/posts.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('comments')
 export class CommentsController {
@@ -24,17 +25,20 @@ export class CommentsController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
+    @UseGuards(JwtAuthGuard)
     create(@Body() body: CreateCommentDto) {
         return this.commentService.create(body)
     }
 
     @Put(":id")
     @HttpCode(HttpStatus.ACCEPTED)
+    @UseGuards(JwtAuthGuard)
     update(@Param('id', new ParseIntPipe()) id: number, @Body() body: UpdateCommentDto) {
         return this.commentService.update(id, body)
     } 
 
     @Delete(":id")
+    @UseGuards(JwtAuthGuard)
     delete(@Param('id', new ParseIntPipe()) id: number) {
         return this.commentService.delete(id)
     }

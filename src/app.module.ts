@@ -7,6 +7,8 @@ import { entities } from './entities';
 import { DataSource } from 'typeorm';
 import { root } from './utils/paths';
 import { CommentModule } from './comments/comments.module';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 console.info(root);
 
@@ -19,8 +21,10 @@ console.info(root);
       synchronize: true,
       database: `${root}/db/db.sqlite`,
     }),
+    UserModule,
     PostModule,
     CommentModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
